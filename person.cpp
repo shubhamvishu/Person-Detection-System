@@ -1,10 +1,11 @@
 #include<iostream>
-//#include<string>
+#include<string>
 #include<bits/stdc++.h>
 #include<conio.h>
-//#include<math.h>
+#include<math.h>
 #include<windows.h>
 using namespace std;
+
 #define GEN 7
 #define H 5
 #define A 4
@@ -12,6 +13,8 @@ using namespace std;
 #define HT 2
 #define S 1
 #define T (GEN+H+A+HC+HT+S)
+
+
 //*****************************************CLASS PERSON**********************************************************
 class person{
 	
@@ -91,9 +94,10 @@ f1.open("stud.txt",ios::in|ios::out|ios::binary);
 person p;
 int i=0;
    while(f1.read((char*)&p,sizeof(p)))
-   {    cout<<"\nRECORD"<<i++;
+   {    cout<<"\nRECORD"<<" "<<(i++)+1;
+        cout<<"\n====================================";
 	    cout<<"\nPerson id:"<<p.id;
-	 	cout<<"\nName:"<<p.name;
+	 	cout<<"\nNAME:"<<p.name;
 	 	cout<<"\nHair color:"<<p.hair_color;
      	cout<<"\nHair type:"<<p.hair_type;
     	cout<<"\nWhether he/she wears specs(1-yes/0-no):"<<p.specs;
@@ -114,14 +118,16 @@ void modify::view(char nm[])
 	 while(f1.read((char*)&p,sizeof(p)))
    {   if(strcmp(nm,p.name)==0)
 	   {f=1;
+	    cout<<"\n==================================================";
 		cout<<"\nPerson id:"<<p.id;
-	 	cout<<"\nName:"<<p.name;
+	 	cout<<"\nNAME:"<<p.name;
 	 	cout<<"\nHair color:"<<p.hair_color;
      	cout<<"\nHair type:"<<p.hair_type;
     	cout<<"\nWhether he/she wears specs(1-yes/0-no):"<<p.specs;
 		cout<<"\nHeight:"<<p.height;
 		cout<<"\nAge:"<<p.age;
 		cout<<"\nGender(M/F):"<<p.gender;
+		cout<<"\n==================================================";
 		cout<<endl<<endl;
 		break;
 	   }
@@ -129,6 +135,7 @@ void modify::view(char nm[])
    }
    if(f==0)
     cout<<"\nOOPS!!...No person with name "<<nm;
+    getch();
    f1.close();
 	
 }
@@ -295,7 +302,9 @@ if(a==pwd)
 	       add(p2);
 	       break;
 	case 3:system("cls");
-	       cout<<"\n1.View particular\n2.View all\n3.Go back\n4.Exit";
+	       cout<<"____________________________________________________________";
+	       cout<<"\n\n\t1. View particular\n\t2. View all\n\t3. Go back\n\t4. Exit";
+	       cout<<"\n__________________________________________________________\n\t:";
 	       int cho;
 	       cin>>cho;
 	       switch(cho)
@@ -315,7 +324,7 @@ if(a==pwd)
 	       //m.view();
           break;
 	case 4:exit(0);   
-    default:cout<<"\nWrong Choice!!!";	          
+    default:cout<<"\nWrong Choice!!!!!";	          
 }
 goto main;
 }
