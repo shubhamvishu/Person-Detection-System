@@ -5,7 +5,13 @@
 //#include<math.h>
 #include<windows.h>
 using namespace std;
-
+#define GEN 7
+#define H 5
+#define A 4
+#define HC 2
+#define HT 2
+#define S 1
+#define T (GEN+H+A+HC+HT+S)
 //*****************************************CLASS PERSON**********************************************************
 class person{
 	
@@ -63,7 +69,9 @@ public:
 //****************************************CLASS MODIFY******************************************************
 class modify:public person{
 	
-	public:friend void add(person&);
+	public:
+	        
+			friend void add(person&);
 	        void view();
 	        void view(char[]);
 };
@@ -166,22 +174,77 @@ void admin::start() const
 	cout<<"\n\nPASSWORD:";
 	
 }
-void search(person& p1)
-{
+void search(person p1)
+{ 
 	person p2;
-    int f=1;
+    int f=1,count,ps[20],i=0;
 	fstream f1;
 	f1.open("stud.txt",ios::in|ios::out|ios::binary);
 	while(f1.read((char*)&p2,sizeof(p2)))
-	{
+	{ 
+	  count=0;
+	  ps[i]=0;
 	   if(p1.gender==p2.gender)
-	   {
+	   { count++;
+	     ps[i]+=GEN;
+	     if(p1.height_min<=p2.height && p2.height<=p1.height_max)
+	     { 
+		     ps[i]+=H; 
+	        if(p1.age_min>=p2.age && p2.age<=p1.age_max)
+	         {
+			 ps[i]+=A;
+	         } 
+	        if(strcmpi(p1.hair_color,p2.hair_color)==0)
+	     	 {ps[i]+=HC;
+	         }  
+			 if(strcmpi(p1.hair_type,p2.hair_type)==0)
+	     	 {ps[i]+=HT; 
+	          }
+			  if(p1.specs==p2.specs)
+	     	  {ps[i]+=S;
+	          }
+		 }
+	   
 	   	
 	   }
+	   i++;
 	}
 	f1.close();
+	int max=ps[0];
+	int index=0;
+	for(int j=0;j<i;j++)
+	 {  cout<<"ps["<<j<<"]"<<ps[j]<<endl;
+	 	if(ps[j]>max)
+	 	 {
+		  max=ps[j];
+		  index=j;
+	     }    
+	 }
+	 person p;
+	 int k=0;
+	 fstream f2;
+	f2.open("stud.txt",ios::in|ios::out|ios::binary);
+	 while(f2.read((char*)&p,sizeof(p)))
+   {    if(k==index)
+        {
+		cout<<"\nRECORD"<<index;
+	    cout<<"\nPerson id:"<<p.id;
+	 	cout<<"\nName:"<<p.name;
+	 	cout<<"\nHair color:"<<p.hair_color;
+     	cout<<"\nHair type:"<<p.hair_type;
+    	cout<<"\nWhether he/she wears specs(1-yes/0-no):"<<p.specs;
+		cout<<"\nHeight:"<<p.height<<" "<<p.height_min<<p.height_max;
+		cout<<"\nAge:"<<p.age<<" "<<p.age_min<<p.age_max;
+		cout<<"\nGender(M/F):"<<p.gender;
+		getch();
+		cout<<endl<<endl;
+	   }
+	   k++;
+   }
+	f2.close();
 
 }	
+//------------------------------------MAIN-------------------------------------------------------------
 int main()
 { 
 
@@ -232,7 +295,7 @@ if(a==pwd)
 	       add(p2);
 	       break;
 	case 3:system("cls");
-	       cout<<"\n1.View particular\n2.View all";
+	       cout<<"\n1.View particular\n2.View all\n3.Go back\n4.Exit";
 	       int cho;
 	       cin>>cho;
 	       switch(cho)
@@ -243,14 +306,18 @@ if(a==pwd)
 	       	    m.view(nm);
 	       	    break;
 	       	case 2:m.view();
+	       	       getch();
 			       break;
-		    case 3:goto main;    
+		    case 3:goto main; 
+			       break;
+		    case 4:exit(0);		      
 		   }
 	       //m.view();
-//	       break;
+          break;
 	case 4:exit(0);   
     default:cout<<"\nWrong Choice!!!";	          
 }
+goto main;
 }
  else{
  	cout<<"\n\n\t\t\t\t\tIncorrect password.....ACCESS DENIED";
