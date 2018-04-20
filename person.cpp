@@ -1,5 +1,6 @@
 #include<iostream>
 #include<vector>
+#include<map>
 #include<string>
 #include<bits/stdc++.h>
 #include<conio.h>
@@ -8,8 +9,6 @@
 #include<ctype.h>
 using namespace std;
 
-vector<char[10]>v1;
-
 #define GEN 7
 #define H 5
 #define A 4
@@ -17,6 +16,19 @@ vector<char[10]>v1;
 #define HT 2
 #define S 1
 #define T (GEN+H+A+HC+HT+S)
+
+vector<int>v1;
+map<string,int>m1;
+
+int invec(vector<int>v2,int k)
+{
+	for(int i=0;i<v2.size();i++)
+	{
+		if(v2[i]==k)
+		 return 1;
+	}
+	return 0;
+}
 
 
 //*****************************************CLASS PERSON**********************************************************
@@ -101,33 +113,36 @@ cout<<"\n";
 
  try{
  	cout<<"--------------------------------------------------------------------------------------------------------------------\n";
- 	cout<<setw(6)<<"RECORD"<<setw(15)<<"Person ID"<<setw(25)<<"NAME"<<setw(15)<<"Hair color"<<setw(10)<<"Hair type"<<setw(10)<<"Specs"<<setw(10)<<"Height"<<setw(10)<<"Age"<<setw(10)
+ 	cout<<setw(6)<<"RECORD"<<setw(15)<<"Person ID"<<setw(20)<<"NAME"<<setw(2)<<" "<<setw(15)<<"Hair color"<<setw(15)<<"Hair type"<<setw(10)<<"Specs"<<setw(10)<<"Height"<<setw(10)<<"Age"<<setw(10)
 	 <<"Gender"<<endl;
 	 cout<<"----------------------------------------------------------------------------------------------------------------------";
- 
-   while(f1.read((char*)&p,sizeof(p)))
-   {    /*cout<<"\nRECORD"<<" "<<(i++)+1;
-        cout<<"\n====================================";
-	    cout<<"\nPerson id:"<<p.id;
-	 	cout<<"\nNAME:"<<p.name;
-	 	cout<<"\nHair color:"<<p.hair_color;
-     	cout<<"\nHair type:"<<p.hair_type;
-    	cout<<"\nWhether he/she wears specs(1-yes/0-no):"<<p.specs;
-		cout<<"\nHeight:"<<p.height;
-		cout<<"\nAge:"<<p.age;
-		cout<<"\nGender(M/F):"<<p.gender;
-		cout<<endl<<endl;*/
+	 m1.clear();
+    
+	while(f1.read((char*)&p,sizeof(p)))
+   {   
+	   string str=p.name;
+	   m1[str]++;
 	   cout<<endl<<setw(6)<<(i++)+1;
-       // cout<<"\n====================================";
 	    cout<<setw(15)<<p.id;
-	 	cout<<setw(25)<<p.name;
+	 	cout<<setw(20)<<p.name;
+	 	if(m1[str]>1)
+	 	{cout<<setw(2)<<m1[str];
+		 }
+		 else{
+		 	cout<<setw(2)<<" ";
+		 }
 	 	cout<<setw(15)<<p.hair_color;
-     	cout<<setw(10)<<p.hair_type;
-    	cout<<setw(10)<<p.specs;
+     	cout<<setw(15)<<p.hair_type;
+     	if(p.specs==0)
+     	{ cout<<setw(10)<<"NO";
+		 }
+		 else{cout<<setw(10)<<"YES";
+		 }
+    	//cout<<setw(10)<<p.specs;
 		cout<<setw(10)<<p.height;
 		cout<<setw(10)<<p.age;
 		cout<<setw(10)<<p.gender;
-		//cout<<endl<<endl;
+		
    }
    if(i==0)
     throw i;
@@ -212,8 +227,8 @@ class admin:public person
 
 void admin::start() const
 {   
-	cout<<"\n\t\t\t***************************************************************\n\n\n";
-	cout<<"\t\t\t\t\tWELCOME TO PERSON DETECTION SYSTEM\n\n\n";
+	cout<<"\n\t\t\t***************************************************************\n\n\n\n";
+	cout<<"\t\t\t\t\tWELCOME TO PERSON DETECTION SYSTEM\n\n\n\n";
 	cout<<"\t\t\t***************************************************************\n";
 	cout<<"\n\n\nEnter the password to login:";
 	cout<<"\n\nPASSWORD:";
@@ -222,13 +237,13 @@ void admin::start() const
 void search(person p1)
 { 
 	person p2;
-    int f=1,count,ps[20],i=0;
+    int count,ps[20],i=0;
 	fstream f1;
 	f1.open("stud.txt",ios::in|ios::out|ios::binary);
 	while(f1.read((char*)&p2,sizeof(p2)))
 	{ 
 	  count=0;
-	  ps[i]=0;
+	  ps[i]=0;//cout<<"p["<<i<<"]";
 	   if(p1.gender==p2.gender)
 	   { count++;
 	     ps[i]+=GEN;
@@ -237,7 +252,7 @@ void search(person p1)
 	     { 
 		        ps[i]+=H;
 	        
-			if(p2.age_min<=p1.age && p1.age<=p2.age_max)
+			if(p1.age_min<=p2.age && p2.age<=p1.age_max)
 	         {
 			      ps[i]+=A;
 	         } 
@@ -250,6 +265,7 @@ void search(person p1)
 			  if(p1.specs==p2.specs)
 	     	  {   ps[i]+=S;
 	          }
+	          cout<<endl;
 		 }
 	   
 	   	
@@ -258,40 +274,92 @@ void search(person p1)
 	}
 	f1.close();
 	int max=ps[0];
-	int index=0;
+	int index=-1;
 	for(int j=0;j<i;j++)
-	 {  cout<<"ps["<<j<<"]"<<ps[j]<<endl;
-	 	if(ps[j]>max)
+	 {  //cout<<"ps["<<j<<"]"<<ps[j]<<endl;
+	 	if(ps[j]>=max )
 	 	 {
 		  max=ps[j];
 		  index=j;
 	     }    
 	 }
+	 //cout<<"max="<<max;
+	 v1.clear();
+	 if(max>=0.5*T)
+	 {
+	 
+	 for(int j=0;j<i;j++)
+	 {  
+	 	if(ps[j]==max)
+	 	 {
+		 v1.push_back(j);
+	     }    
+	 }
+	 
+    }
+
 	 person p;
-	 int k=0;
-	 cout<<"\n______________________________________________________";
-	 cout<<"\nPERCENTAGE OF ACCURACY = "<<(max*100)/T<<"%";
-	 cout<<"\n______________________________________________________\n";
+	 int k=0,f=0;
 	 fstream f2;
 	f2.open("stud.txt",ios::in|ios::out|ios::binary);
-	 while(f2.read((char*)&p,sizeof(p)))
-   {    if(k==index)
-        {
-		cout<<"\nRECORD"<<" "<<index+1;
-		cout<<"\n*************";
-	    cout<<"\nPerson id:"<<p.id;
-	 	cout<<"\nName:"<<p.name;
-	 	cout<<"\nHair color:"<<p.hair_color;
-     	cout<<"\nHair type:"<<p.hair_type;
-    	cout<<"\nWhether he/she wears specs(1-yes/0-no):"<<p.specs;
-		cout<<"\nHeight:"<<p.height<<" ";//<<p.height_min<<p.height_max;
-		cout<<"\nAge:"<<p.age<<" ";//<<p.age_min<<p.age_max;
-		cout<<"\nGender(M/F):"<<p.gender;
-		getch();
-		cout<<endl<<endl;
-	   }
-	   k++;
+	
+	if(index!=-1)
+
+   {   float per=(max*100)/T;
+       m1.clear();
+	   
+	   while(f2.read((char*)&p,sizeof(p)))
+       {   string str=p.name;
+	       m1[str]++; 
+	      if(invec(v1,k))
+          {  f=1;
+        	
+        	cout<<"\n\n***************************************************************";
+		    cout<<"\nRECORD"<<" "<<k+1;
+		    cout<<"\n\t_________________________________________________";
+		    cout<<"\n\t\tNAME:"<<p.name;
+		    if(m1[str]>1)
+	 	    {cout<<setw(2)<<m1[str];
+		     }
+		    else{
+		 	cout<<setw(2)<<" ";
+		    }
+		    cout<<"\n\t_________________________________________________"<<endl;
+	        cout<<setw(15)<<"Person id :"<<setw(15)<<p.id<<endl;
+	 	    cout<<setw(15)<<"Hair color :"<<setw(15)<<p.hair_color<<endl;
+     	    cout<<setw(15)<<"Hair type :"<<setw(15)<<p.hair_type<<endl;
+    	    cout<<setw(15)<<"Wears specs :";
+    	    if(p.specs==0)
+    	     cout<<setw(15)<<"NO"<<endl;
+    	     else
+    	     cout<<setw(15)<<"YES"<<endl;
+		    cout<<setw(15)<<"Height :"<<setw(15)<<p.height<<endl;
+		    cout<<setw(15)<<"Age :"<<setw(15)<<p.age<<endl;
+		    cout<<setw(15)<<"Gender(M/F) :"<<setw(15)<<p.gender<<endl;
+		    cout<<endl<<endl;
+	
+	        cout<<"\n\n\t\tPERCENTAGE OF ACCURACY = "<<per<<"%";
+	        cout<<"\n*******************************************************************\n";
+	      } 
+	       k++;
+       }
+       if(f==0)
+       {
+       	cout<<"\n\n\t\tRECORDS FOUND ARE LESS THAN 50% OF ACCURACY";
+       	
+	   }	  
    }
+    
+   else if(index!=1 && max==GEN)
+       {
+       	cout<<"\n\n\t\tRECORDS FOUND ARE LESS THAN 50% OF ACCURACY";
+       	 
+	   }
+   else
+   {
+   	cout<<"\n\t\tNO SUCH RECORD EXISTS !!!!";
+   }
+	 getch();
 	f2.close();
 
 }	
@@ -341,10 +409,12 @@ if(a==pwd)
 	       p1.get();
 	       search(p1);
 	       break;
+	
 	case 2:person p2;
 	       p2.getadd();
 	       add(p2);
 	       break;
+	
 	case 3:system("cls");
 	       cout<<"____________________________________________________________";
 	       cout<<"\n\n\t1. View particular\n\t2. View all\n\t3. Go back\n\t4. Exit";
@@ -354,19 +424,23 @@ if(a==pwd)
 	       switch(cho)
 	       {
 	       	case 1:char nm[20];
-	       	    cout<<"\nEnter the name:";
-	       	    cin>>nm;
-	       	    m.view(nm);
-	       	    break;
-	       	case 2:m.view();
+	       	       cout<<"\nEnter the name:";
+	       	       cin>>nm;
+	       	       m.view(nm);
+	       	       break;
+	       	
+		    case 2:m.view();
 	       	       getch();
 			       break;
-		    case 3:goto main; 
+		    
+			case 3:goto main; 
 			       break;
-		    case 4:exit(0);		      
+		    
+			case 4:exit(0);		      
 		   }
 	       //m.view();
           break;
+	
 	case 4:exit(0);   
     default:cout<<"\nWrong Choice!!!!!";	          
 }
